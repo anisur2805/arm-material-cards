@@ -12,6 +12,7 @@ namespace ARM_Material_Cards\widgets;
 
 use Elementor\Controls_Manager;
 use Elementor\Core\Schemes\Typography;
+use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Text_Shadow;
 use Elementor\Group_Control_Typography;
 use Elementor\Repeater;
@@ -211,6 +212,15 @@ class ARM_Material_Card_Widget extends Widget_Base {
 			]
 		);
 
+        $this->add_control(
+			'follow_us_text',
+			[
+				'label' => esc_html__( 'Follow Us', 'plugin-name' ),
+				'type' => Controls_Manager::TEXT,
+                'default' => esc_html__('Follow Us', 'elementor-list-widget'),
+			]
+		);
+
         $repeater->add_control(
 			'title_bg_color',
 			[
@@ -219,6 +229,9 @@ class ARM_Material_Card_Widget extends Widget_Base {
                 'default' => '#000',
 				'selectors' => [
 					'{{WRAPPER}} {{CURRENT_ITEM}} .arm-material-title' => 'background: {{VALUE}}',
+					'{{WRAPPER}} {{CURRENT_ITEM}} .mc-footer a' => 'background: {{VALUE}}',
+					'{{WRAPPER}} {{CURRENT_ITEM}} .mc-footer' => 'background: #ffcdd2',
+					'{{WRAPPER}} {{CURRENT_ITEM}} .mc-btn-action' => 'background: {{VALUE}}',
 					'{{WRAPPER}} {{CURRENT_ITEM}} .material-card.Red h2:after' => 'border-top-color: #ff0',
 					'{{WRAPPER}} {{CURRENT_ITEM}} .material-card.Red h2:after' => 'border-right-color: {{VALUE}}',
 				],
@@ -296,14 +309,14 @@ class ARM_Material_Card_Widget extends Widget_Base {
 				'fields' => $repeater->get_controls(),           /* Use our repeater */
 				'default' => [
 					[
-						'arm_card_title' => esc_html__( 'Card Item - one', 'elementor-list-widget' ),
-						'arm_card_subtitle' => '',
-						'arm_card_content' => '',
+						'arm_card_title' => esc_html__( 'Card Item - #1', 'elementor-list-widget' ),
+						'arm_card_subtitle' => 'CEO',
+						'arm_card_content' => 'So, what are you waiting for? Don’t waste time! Get on board and learn to truly master Object-oriented PHP!',
 					],
 					[
-						'arm_card_title' => esc_html__( 'Card Item - one', 'elementor-list-widget' ),
-						'arm_card_subtitle' => '',
-						'arm_card_content' => '',
+						'arm_card_title' => esc_html__( 'Card Item - #2', 'elementor-list-widget' ),
+						'arm_card_subtitle' => 'CTO',
+						'arm_card_content' => 'So, what are you waiting for? Don’t waste time! Get on board and learn to truly master Object-oriented PHP!',
 					],
 				],
 				'title_field' => '{{{ arm_card_title }}}',
@@ -312,60 +325,11 @@ class ARM_Material_Card_Widget extends Widget_Base {
 
 		$this->end_controls_section();
 
-		$this->start_controls_section(
-			'marker_section',
-			[
-				'label' => esc_html__( 'List Marker', 'elementor-list-widget' ),
-				'tab' => Controls_Manager::TAB_CONTENT,
-			]
-		);
-
-		$this->add_control(
-			'marker_type',
-			[
-				'label' => esc_html__( 'Marker Type', 'elementor-list-widget' ),
-				'type' => Controls_Manager::CHOOSE,
-				'options' => [
-					'ordered' => [
-						'title' => esc_html__( 'Ordered List', 'elementor-list-widget' ),
-						'icon' => 'eicon-editor-list-ol',
-					],
-					'unordered' => [
-						'title' => esc_html__( 'Unordered List', 'elementor-list-widget' ),
-						'icon' => 'eicon-editor-list-ul',
-					],
-					'other' => [
-						'title' => esc_html__( 'Custom List', 'elementor-list-widget' ),
-						'icon' => 'eicon-edit',
-					],
-				],
-				'default' => 'ordered',
-				'toggle' => false,
-			]
-		);
-
-		$this->add_control(
-			'marker_content',
-			[
-				'label' => esc_html__( 'Custom Marker', 'elementor-list-widget' ),
-				'type' => Controls_Manager::TEXT,
-				'placeholder' => esc_html__( 'Enter custom marker', 'elementor-list-widget' ),
-				'default' => '🧡',
-				'condition' => [
-					'marker_type[value]' => 'other',
-				],
-				'selectors' => [
-					'{{WRAPPER}} .elementor-list-widget-text::marker' => 'content: "{{VALUE}}";',
-				],
-			]
-		);
-
-		$this->end_controls_section();
-
+        // General Typo Styles
 		$this->start_controls_section(
 			'typography_section',
 			[
-				'label' => __( 'Typography Controls', 'plugin-name' ),
+				'label' => __( 'Typography', 'plugin-name' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -400,59 +364,113 @@ class ARM_Material_Card_Widget extends Widget_Base {
 			]
 		);
 
-		$this->add_group_control(
+        $this->add_group_control(
 			Group_Control_Typography::get_type(),
 			[
-				'name' => 'icon_typography',
-				'selector' => '{{WRAPPER}} .elementor-list-widget-text, {{WRAPPER}} .elementor-list-widget-text > a',
+				'name' => 'follow_text_typo',
+				'label' => __( 'Follow', 'plugin-domain' ),
+				'scheme' => Typography::TYPOGRAPHY_2,
+				'selector' => '{{WRAPPER}} .mc-footer h4',
 			]
 		);
+        
+        $this->end_controls_section();
 
-		$this->add_group_control(
-			Group_Control_Text_Shadow::get_type(),
+        // Social Icon Styles
+        $this->start_controls_section(
+			'socials_section',
 			[
-				'name' => 'text_shadow',
-				'selector' => '{{WRAPPER}} .elementor-list-widget-text',
-			]
-		);
-
-		$this->end_controls_section();
-
-		$this->start_controls_section(
-			'style_marker_section',
-			[
-				'label' => esc_html__( 'Marker Style', 'elementor-list-widget' ),
+				'label' => __( 'Social Icons', 'plugin-name' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
 
-		$this->add_control(
-			'marker_spacing',
+        $this->add_control(
+			'size',
 			[
-				'label' => esc_html__( 'Spacing', 'elementor-list-widget' ),
+				'type' => Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Icon Font Size', 'plugin-name' ),
+				'placeholder' => '20',
+				'min' => 0,
+				'max' => 100,
+				'step' => 1,
+				'default' => 20,
+                'selectors' => [
+                    '{{WRAPPER}} {{CURRENT_ITEM}} .material-card .mc-footer a' => 'font-size: {{VALUE}}px',
+                ]
+			]
+		);
+
+        $this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'icon_background',
+				'label' => esc_html__( 'Icon Background', 'plugin-name' ),
+				'types' => [ 'classic', 'gradient', 'video' ],
+				'selector' => '{{WRAPPER}} .material-card .mc-footer a',
+			]
+		);
+
+        $this->add_group_control(
+			Group_Control_Background::get_type(),
+			[
+				'name' => 'icon_color',
+				'label' => esc_html__( 'Icon Color', 'plugin-name' ),
+				'types' => [ 'classic', 'gradient', 'video' ],
+				'selector' => '{{WRAPPER}} .material-card .mc-footer a',
+			]
+		);
+
+        $this->add_control(
+			'icon_width',
+			[
+				'label' => esc_html__( 'Icon Box Width', 'plugin-name' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', 'rem' ],
+				'size_units' => [ 'px', '%' ],
 				'range' => [
 					'px' => [
 						'min' => 0,
+						'max' => 1000,
+						'step' => 5,
+					],
+					'%' => [
+						'min' => 0,
 						'max' => 100,
-					],
-					'em' => [
-						'min' => 0,
-						'max' => 10,
-					],
-					'rem' => [
-						'min' => 0,
-						'max' => 10,
 					],
 				],
 				'default' => [
 					'unit' => 'px',
-					'size' => 40,
+					'size' => 50,
 				],
 				'selectors' => [
-					// '{{WRAPPER}} .elementor-list-widget' => 'padding-left: {{SIZE}}{{UNIT}};',
-					'{{WRAPPER}} .elementor-list-widget' => 'padding-inline-start: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .material-card .mc-footer a' => 'width: {{SIZE}}{{UNIT}};',
+				],
+			]
+		);
+
+        $this->add_control(
+			'icon_height',
+			[
+				'label' => esc_html__( 'Icon Box Height', 'plugin-name' ),
+				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%' ],
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 1000,
+						'step' => 5,
+					],
+					'%' => [
+						'min' => 0,
+						'max' => 100,
+					],
+				],
+				'default' => [
+					'unit' => 'px',
+					'size' => 50,
+				],
+				'selectors' => [
+					'{{WRAPPER}} .material-card .mc-footer a' => 'height: {{SIZE}}{{UNIT}};',
 				],
 			]
 		);
@@ -497,7 +515,7 @@ class ARM_Material_Card_Widget extends Widget_Base {
                         </a>
                         <div class="mc-footer">
                             <h4>
-                                Social
+                                <?php echo $settings['follow_us_text']; ?>
                             </h4>
                             <?php 
                                 $fb_url = $card_item['arm_material_card_fb_url']['url'];
@@ -510,16 +528,16 @@ class ARM_Material_Card_Widget extends Widget_Base {
                                 $li_is_external = $card_item['arm_material_card_li_url']['is_external'] ? '_blank' : '';
                             ?>
                             <a href="<?php echo $fb_url; ?>" class="text-center" target="<?php echo $fb_is_external; ?>"> 
-                                <i class="fab fa-facebook"></i>
+                                <i class="fa fa-facebook"></i>
                             </a>
                             <a href="<?php echo $tt_url; ?>" class="text-center" target="<?php echo $tt_is_external; ?>"> 
-                                <i class="fab fa-twitter"></i>
+                                <i class="fa fa-twitter"></i>
                             </a>
                             <a href="<?php echo $li_url; ?>" class="text-center" target="<?php echo $li_is_external; ?>"> 
-                                <i class="fab fa-linkedin"></i>
+                                <i class="fa fa-linkedin"></i>
                             </a>
                             <a href="<?php echo $ig_url; ?>" class="text-center" target="<?php echo $ig_is_external; ?>">
-                                <i class="fab fa-instagram"></i>
+                                <i class="fa fa-instagram"></i>
                             </a>
                         </div>
                     </article>
