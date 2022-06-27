@@ -10,6 +10,7 @@
 
 namespace ARM_Material_Cards;
 
+use ARM_Material_Cards\widgets\ARM_Logo_Carousel;
 use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 
 /**
@@ -222,10 +223,10 @@ use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 	public function register_widgets( $widgets_manager ) {
 
 		require_once( __DIR__ . '/widgets/widgets.php' );
-		// require_once( __DIR__ . '/includes/widgets/widget-2.php' );
+		require_once( __DIR__ . '/widgets/logo-carousel-widgets.php' ); 
 
 		$widgets_manager->register( new ARM_Material_Card_Widget() );
-		// $widgets_manager->register( new Widget_2() );
+		$widgets_manager->register( new ARM_Logo_Carousel() ); 
 
 	}
 
@@ -250,9 +251,13 @@ use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 
     function arm_material_cards_editor_scripts() {
         wp_enqueue_script('jquery');
-        wp_enqueue_script('material-cards-js', plugins_url( 'assets/js/jquery.material-cards.min.js', __FILE__ ), array('jquery'), '1.0.0' );
-        wp_enqueue_script( 'arm-main-script', plugins_url( 'assets/js/main.js', __FILE__ ), array(), time() );
+        wp_enqueue_script('material-cards-js', plugins_url( 'assets/js/jquery.material-cards.min.js', __FILE__ ), array('jquery'), '1.0.0', true );
+        wp_enqueue_script( 'owl-carousel-script', plugins_url( 'assets/js/owl.carousel.min.js', __FILE__ ), array('jquery'), '2.3.4', true );
+        wp_enqueue_script( 'arm-main-script', plugins_url( 'assets/js/arm-main.js', __FILE__ ), array('jquery', 'owl-carousel-script'), time(), true );
+        
         wp_enqueue_style('material-cards-css', plugins_url( 'assets/css/material-cards.css', __FILE__ ), array(), '1.0.0' );
+        wp_enqueue_style('owl-carousel', plugins_url( 'assets/css/owl.carousel.min.css', __FILE__ ), array(), '2.3.4' );
+        wp_enqueue_style('owl-carousel-theme', plugins_url( 'assets/css/owl.theme.default.min.css', __FILE__ ), array(), '2.3.4' );
         wp_enqueue_style('bootstrap-v3', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css', array(), '3.3.5' );
         wp_enqueue_style('font-awesome');
         wp_enqueue_style('font-awesome', plugins_url( 'assets/css/style.css', __FILE__ ), array(), time() );
