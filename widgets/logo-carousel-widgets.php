@@ -129,6 +129,15 @@
 			$repeater = new Repeater();
 
 			$repeater->add_control(
+				'image_title',
+				[
+					'label'   => esc_html__( 'Carousel Text', 'plugin-name' ),
+					'type'    => Controls_Manager::TEXT,
+					'default' => 'Item 1',
+				]
+			);
+
+			$repeater->add_control(
 				'image',
 				[
 					'label'   => esc_html__( 'Choose Image', 'plugin-name' ),
@@ -136,15 +145,6 @@
 					'default' => [
 						'url' => Utils::get_placeholder_image_src(),
 					],
-				]
-			);
-
-			$repeater->add_control(
-				'image_title',
-				[
-					'label'   => esc_html__( 'Carousel Text', 'plugin-name' ),
-					'type'    => Controls_Manager::TEXT,
-					'default' => 'Item 1',
 				]
 			);
 
@@ -157,7 +157,7 @@
 					'default' => [
 						[
 							'image'       => '',
-							'image_title' => esc_html__( 'Card Item - #1', 'elementor-list-widget' ),
+							'image_title' => esc_html__( 'Item 1', 'elementor-list-widget' ),
 						],
 					],
 					'title_field' => '{{{ image_title }}}',
@@ -171,8 +171,8 @@
 					'type'         => Controls_Manager::SWITCHER,
 					'label_on'     => esc_html__( 'Show', 'your-plugin' ),
 					'label_off'    => esc_html__( 'Hide', 'your-plugin' ),
-					'return_value' => 'yes',
-					'default'      => 'yes',
+					'return_value' => true,
+					'default'      => false,
 				]
 			);
 
@@ -183,8 +183,8 @@
 					'type'         => Controls_Manager::SWITCHER,
 					'label_on'     => esc_html__( 'Yes', 'your-plugin' ),
 					'label_off'    => esc_html__( 'No', 'your-plugin' ),
-					'return_value' => 'yes',
-					'default'      => 'yes',
+					'return_value' => true,
+					'default'      => false,
 				]
 			);
 
@@ -195,8 +195,8 @@
 					'type'         => Controls_Manager::SWITCHER,
 					'label_on'     => esc_html__( 'Show', 'your-plugin' ),
 					'label_off'    => esc_html__( 'Hide', 'your-plugin' ),
-					'return_value' => 'yes',
-					'default'      => 'yes',
+					'return_value' => true,
+					'default'      => false,
 				]
 			);
 
@@ -205,11 +205,10 @@
                 [
                     'label' => esc_html__( 'Margin', 'plugin-name' ),
                     'type' => Controls_Manager::NUMBER,
-                    'size_units' => [ 'px', '%', 'em' ],
+                    'min' => 5,
+                    'max' => 100,
+                    'step' => 5,
                     'default' => 10,
-                    'selectors' => [
-                        '{{WRAPPER}} .your-class' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                    ],
                 ]
             );
 
@@ -234,6 +233,16 @@
 				]
 			);
 
+            $this->add_group_control(
+                \Elementor\Group_Control_Background::get_type(),
+                [
+                    'name' => 'border',
+                    'label' => esc_html__( 'Border', 'plugin-name' ),
+                    'types' => [ 'classic', 'gradient', 'video' ],
+                    'selector' => '{{WRAPPER}} .your-class',
+                ]
+            );
+
 			$this->end_controls_section();
 
 		}
@@ -248,20 +257,57 @@
 		 */
 		protected function render() {
 			$settings = $this->get_settings_for_display();
-                // if ( 'yes' === $settings['show_title'] ) {
-                // 	echo '<h2>' . $settings['title'] . '</h2>';
-                // }
+            
+            $this->add_render_attribute(
+                'arm_logo_carousel_options',
+                [
+                    'id' => 'logo-carousel-' . $this->get_id(),
+                    'data-dots' => $settings['show_dots'],
+                    'data-nav' => $settings['show_nav'],
+                    'data-loop' => $settings['loop_infinite'],
+                    'data-margin' => $settings['margin'],
+                ]
+            );
                 
 		    ?>
 		   <!-- Set up your HTML -->
-            <div class="owl-carousel logo-carousel">
+            <div class="owl-carousel owl-theme logo-carousel" <?php echo $this->get_render_attribute_string('arm_logo_carousel_options'); ?>>
                 <?php foreach ($settings['arm_logo_carousel_rp'] as $slide ): ?>
                 <div>
-                    <img src="<?php echo $slide['image']['url'] ?>" alt="<?php echo $slide['image']['image_title'] ?>" />
+                    <img src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="<?php esc_attr_e( $slide['image_title'] ); ?>" />
                 </div>
                 <?php endforeach; ?>
             </div>
 
+            <?php
+        }
+
+        protected function _content_template() {
+            ?>
+            <# 
+                view.addRenderAttribute(
+                    'arm_logo_carousel_options',
+                    {
+                        'id': 'logo-carousel-id',
+                        'data-dots': settings.show_dots,
+                        'data-nav': settings.show_nav,
+                        'data-margin': settings.margin,
+                        'data-loop': settings.loop_infinite,
+                    }
+                );
+            #>
+
+            <# if( settings.arm_logo_carousel_rp.length ) { #>
+                <div class="owl-carousel owl-theme logo-carousel" {{{ view.getRenderAttributeString('arm_logo_carousel_options') }}} >
+                    <# _.each(settings.arm_logo_carousel_rp, function(slide) { #>
+                <div>
+                    <img src="{{slide.image.url}}" alt="{{slide.image_title}}" />
+                </div>
+                <# }) #>                
+            </div>
+            <# } #>
+
+           
             <?php
         }
 

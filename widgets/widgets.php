@@ -409,7 +409,7 @@ class ARM_Material_Card_Widget extends Widget_Base {
 				'types' => [ 'classic', 'gradient', 'video' ],
 				'selector' => '{{WRAPPER}} .material-card .mc-footer a',
 			]
-		);
+            );
 
         $this->add_group_control(
 			Group_Control_Background::get_type(),
