@@ -12,7 +12,8 @@
 
 	use Elementor\Controls_Manager;
 	use Elementor\Core\Schemes\Typography;
-	use Elementor\Group_Control_Typography;
+use Elementor\Group_Control_Image_Size;
+use Elementor\Group_Control_Typography;
 	use Elementor\Repeater;
 	use Elementor\Utils;
 	use Elementor\Widget_Base;
@@ -148,6 +149,26 @@
 				]
 			);
 
+            $this->add_group_control(
+                \Elementor\Group_Control_Background::get_type(),
+                [
+                    'name' => 'test',
+                    'label' => esc_html__( 'Anisur ', 'plugin-name' ),
+                    'types' => [ 'classic', 'gradient', 'video' ],
+                    'selector' => '{{WRAPPER}} .your-class',
+                ]
+            );
+
+            $this->add_group_control(
+                Group_Control_Image_Size::get_type(),
+                [
+                    'name' => 'thumbnail', // Usage: `{name}_size` and `{name}_custom_dimension`, in this case `thumbnail_size` and `thumbnail_custom_dimension`.
+                    'exclude' => [ 'custom' ],
+                    'include' => [],
+                    'default' => 'large',
+                ]
+            );
+
 			$this->add_control(
 				'arm_logo_carousel_rp',
 				[
@@ -244,6 +265,19 @@
             );
 
 			$this->end_controls_section();
+            
+            // General Typo Styles
+			$this->start_controls_section(
+				'image_section',
+				[
+					'label' => __( 'Image', 'plugin-name' ),
+					'tab'   => Controls_Manager::TAB_STYLE,
+				]
+			);
+
+            
+
+			$this->end_controls_section();
 
 		}
 
@@ -274,7 +308,7 @@
             <div class="owl-carousel owl-theme logo-carousel" <?php echo $this->get_render_attribute_string('arm_logo_carousel_options'); ?>>
                 <?php foreach ($settings['arm_logo_carousel_rp'] as $slide ): ?>
                 <div>
-                    <img src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="<?php esc_attr_e( $slide['image_title'] ); ?>" />
+                    <img class="owl-lazy" data-src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="<?php esc_attr_e( $slide['image_title'] ); ?>" />
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -301,7 +335,7 @@
                 <div class="owl-carousel owl-theme logo-carousel" {{{ view.getRenderAttributeString('arm_logo_carousel_options') }}} >
                     <# _.each(settings.arm_logo_carousel_rp, function(slide) { #>
                 <div>
-                    <img src="{{slide.image.url}}" alt="{{slide.image_title}}" />
+                    <img class="owl-lazy" data-src="{{slide.image.url}}" alt="{{slide.image_title}}" />
                 </div>
                 <# }) #>                
             </div>

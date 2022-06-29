@@ -19,6 +19,9 @@
             margin: $margin,
             nav: $nav,
             dots: $dots,
+            dotsEach: true,
+            lazyLoad: true,
+            video: true,
             responsive: {
                 0: {
                     items: 1
