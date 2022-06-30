@@ -10,8 +10,12 @@
 
 	namespace ARM_Material_Cards\widgets;
 
-	use Elementor\Controls_Manager;
-	use Elementor\Core\Schemes\Typography;
+use Elementor\Control_Media;
+use Elementor\Controls_Manager;
+use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Elementor\Core\Schemes\Typography;
+use Elementor\Group_Control_Background;
+use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Image_Size;
 use Elementor\Group_Control_Typography;
 	use Elementor\Repeater;
@@ -233,6 +237,106 @@ use Elementor\Group_Control_Typography;
                 ]
             );
 
+            $slides_to = range( 1, 10 );
+            $slides_to = array_combine( $slides_to, $slides_to );
+
+		$this->add_responsive_control(
+			'slides_to_show',
+			[
+				'label' => esc_html__( 'Slides to Show', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => [
+					'' => esc_html__( 'Default', 'elementor' ),
+				] + $slides_to,
+				'frontend_available' => true,
+				'render_type' => 'template',
+				'selectors' => [
+					'{{WRAPPER}}' => '--e-image-carousel-slides-to-show: {{VALUE}}',
+				],
+			]
+		);
+
+		$this->add_responsive_control(
+			'slides_to_scroll',
+			[
+				'label' => esc_html__( 'Slides to Scroll', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => [
+					'' => esc_html__( 'Default', 'elementor' ),
+				] + $slides_to,
+				'frontend_available' => true,
+				'render_type' => 'template',
+				'selectors' => [
+					'{{WRAPPER}}' => '--e-image-carousel-slides-to-show: {{VALUE}}',
+				],
+			]
+		);
+
+        $this->add_responsive_control(
+			'image_stretch',
+			[
+				'label' => esc_html__( 'Image Stretch', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+                'default' => '1',
+				'options' => [
+					'0' => esc_html__( 'No', 'elementor' ),
+					'1' => esc_html__( 'Yes', 'elementor' ),
+				] ,
+				'selectors' => [
+					'{{WRAPPER}}' => '--e-image-carousel-slides-to-show: {{VALUE}}',
+				],
+			]
+		);
+
+        $this->add_control(
+			'link_to',
+			[
+				'label' => esc_html__( 'Link', 'plugin-name' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => 'none',
+				'options' => [
+					'none'  => esc_html__( 'None', 'plugin-name' ),
+					'media-file' => esc_html__( 'Media File', 'plugin-name' ),
+					'custom-url' => esc_html__( 'Custom URL', 'plugin-name' ),
+				],
+			]
+		);
+
+        $this->add_control(
+			'website_link',
+			[
+                'label' => esc_html__( 'Link', 'plugin-name' ),
+				'type' => Controls_Manager::URL,
+				'placeholder' => esc_html__( 'https://your-link.com', 'plugin-name' ),
+				'default' => [
+					'url' => '',
+					'is_external' => true,
+					'nofollow' => true,
+					'custom_attributes' => '',
+				],
+                'show_label' => false,
+                'condition' => [
+                    'link_to' => 'custom-url',
+                ]
+			]
+		);
+
+        $this->add_control(
+			'caption_type',
+			[
+				'label' => esc_html__( 'Caption', 'elementor' ),
+				'type' => Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [
+					'' => esc_html__( 'None', 'elementor' ),
+					'title' => esc_html__( 'Title', 'elementor' ),
+					'caption' => esc_html__( 'Caption', 'elementor' ),
+					'description' => esc_html__( 'Description', 'elementor' ),
+				],
+			]
+		);
+
+
 			$this->end_controls_section();
 
 			// General Typo Styles
@@ -243,6 +347,30 @@ use Elementor\Group_Control_Typography;
 					'tab'   => Controls_Manager::TAB_STYLE,
 				]
 			);
+
+            $this->add_responsive_control(
+                'content_align',
+                [
+                    'type' => \Elementor\Controls_Manager::CHOOSE,
+                    'label' => esc_html__( 'Alignment', 'plugin-name' ),
+                    'options' => [
+                        'left' => [
+                            'title' => esc_html__( 'Left', 'plugin-name' ),
+                            'icon' => 'eicon-text-align-left',
+                        ],
+                        'center' => [
+                            'title' => esc_html__( 'Center', 'plugin-name' ),
+                            'icon' => 'eicon-text-align-center',
+                        ],
+                        'right' => [
+                            'title' => esc_html__( 'Right', 'plugin-name' ),
+                            'icon' => 'eicon-text-align-right',
+                        ],
+                    ],
+                    'devices' => [ 'desktop', 'tablet' ],
+                    'prefix_class' => 'content-align-%s',
+                ]
+            );
 
 			$this->add_group_control(
 				Group_Control_Typography::get_type(),
@@ -255,14 +383,16 @@ use Elementor\Group_Control_Typography;
 			);
 
             $this->add_group_control(
-                \Elementor\Group_Control_Background::get_type(),
-                [
-                    'name' => 'border',
-                    'label' => esc_html__( 'Border', 'plugin-name' ),
-                    'types' => [ 'classic', 'gradient', 'video' ],
-                    'selector' => '{{WRAPPER}} .your-class',
-                ]
-            );
+				Group_Control_Typography::get_type(),
+				[
+					'name'     => 'global_title_typo',
+					'label'    => __( 'Global Title Typo', 'plugin-domain' ),
+					'selector' => '{{WRAPPER}} article.material-card h2 .main_title',
+                    'global' => [
+                        'default' => Global_Typography::TYPOGRAPHY_ACCENT,
+                    ]
+				]
+			);
 
 			$this->end_controls_section();
             
@@ -275,7 +405,28 @@ use Elementor\Group_Control_Typography;
 				]
 			);
 
-            
+            $this->add_group_control(
+                Group_Control_Border::get_type(),
+                [
+                    'name' => 'border',
+                    'label' => esc_html__( 'Border', 'plugin-name' ),
+                    'types' => [ 'classic', 'gradient', 'video' ],
+                    'selector' => '{{WRAPPER}} .owl-item img',
+                ]
+            );
+
+
+            $this->add_responsive_control(
+                'image_border_radius',
+                [
+                    'label' => esc_html__( 'Border Radius', 'elementor' ),
+                    'type' => Controls_Manager::DIMENSIONS,
+                    'size_units' => [ 'px', '%' ],
+                    'selectors' => [
+                        '{{WRAPPER}} .owl-item img' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    ],
+                ]
+            );
 
 			$this->end_controls_section();
 
@@ -291,6 +442,7 @@ use Elementor\Group_Control_Typography;
 		 */
 		protected function render() {
 			$settings = $this->get_settings_for_display();
+
             
             $this->add_render_attribute(
                 'arm_logo_carousel_options',
@@ -306,9 +458,23 @@ use Elementor\Group_Control_Typography;
 		    ?>
 		   <!-- Set up your HTML -->
             <div class="owl-carousel owl-theme logo-carousel" <?php echo $this->get_render_attribute_string('arm_logo_carousel_options'); ?>>
-                <?php foreach ($settings['arm_logo_carousel_rp'] as $slide ): ?>
+                <?php foreach ($settings['arm_logo_carousel_rp'] as $slide ): 
+            $image_url = Group_Control_Image_Size::get_attachment_image_src( $slide['image'], 'thumbnail', $settings );
+            // $image_url = 		$this->add_render_attribute( 'image', 'title', \Elementor\Control_Media::get_image_title( $settings['image'] ) );
+
+            // echo \Elementor\Group_Control_Image_Size::get_attachment_image_html( $settings, 'thumbnail', 'image' );
+
+            // $image_caption = $this->get_image_caption( $attachment );
+
+
+            // var_dump($image_url);
+
+                    ?>
                 <div>
                     <img class="owl-lazy" data-src="<?php echo esc_url( $slide['image']['url'] ); ?>" alt="<?php esc_attr_e( $slide['image_title'] ); ?>" />
+                    <div>
+                        <?php echo $settings['caption_type']; ?>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>

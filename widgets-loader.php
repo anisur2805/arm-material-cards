@@ -10,6 +10,8 @@
 
 namespace ARM_Material_Cards;
 
+use ARM_Currency_Widget\widgets\ARM_Currency_Widget;
+use ARM_Material_Cards\controls\Control_Currency;
 use ARM_Material_Cards\widgets\ARM_Logo_Carousel;
 use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 
@@ -224,9 +226,11 @@ use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 
 		require_once( __DIR__ . '/widgets/widgets.php' );
 		require_once( __DIR__ . '/widgets/logo-carousel-widgets.php' ); 
+		require_once( __DIR__ . '/widgets/currency-widget.php' ); 
 
 		$widgets_manager->register( new ARM_Material_Card_Widget() );
 		$widgets_manager->register( new ARM_Logo_Carousel() ); 
+		$widgets_manager->register( new ARM_Currency_Widget() ); 
 
 	}
 
@@ -241,11 +245,9 @@ use ARM_Material_Cards\widgets\ARM_Material_Card_Widget;
 	 */
 	public function register_controls( $controls_manager ) {
 
-		require_once( __DIR__ . '/includes/controls/control-1.php' );
-		require_once( __DIR__ . '/includes/controls/control-2.php' );
+		require_once( __DIR__ . '/controls/currency.php' );
 
-		// $controls_manager->register( new Control_1() );
-		// $controls_manager->register( new Control_2() );
+		$controls_manager->register( new Control_Currency() );
 
 	}
 
