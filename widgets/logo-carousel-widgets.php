@@ -482,7 +482,7 @@ use Elementor\Group_Control_Typography;
             <?php
         }
 
-        protected function _content_template() {
+        protected function content_template() {
             ?>
             <# 
                 view.addRenderAttribute(

@@ -11,7 +11,7 @@ use Elementor\Base_Data_Control;
  * @since 1.0.0
  */
 
- class Control_Currency extends Base_Data_Control {
+ class ARM_Control_Currency extends Base_Data_Control {
     /**
 	 * Get currency control type.
 	 *
